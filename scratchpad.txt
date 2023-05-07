@@ -1,0 +1,3 @@
+curl -d '{"query":"chicken"}' -H 'Content-Type: application/json' -H 'x-app-id:e026dae3' -H 'x-app-key:3a70fac62af0aa32ff3de29f939848d2' https://trackapi.nutritionix.com/v2/search/instant
+
+curl -d '{"query":"8 oz chicken breast"}' -H 'Content-Type: application/json' -H 'x-app-id:e026dae3' -H 'x-app-key:3a70fac62af0aa32ff3de29f939848d2' https://trackapi.nutritionix.com/v2/natural/nutrients

@@ -19,10 +19,16 @@ class User(db.Model):
     username = db.Column(db.Text, nullable=False)
     image_url = db.Column(db.Text, default="/static/images/default-pic.png")
     password = db.Column(db.Text, nullable=False)
-    calories = db.Column(db.Float)
-    protein = db.Column(db.Float)
-    carbs = db.Column(db.Float)
-    fat = db.Column(db.Float)
+    calorie_goal = db.Column(db.Float, nullable=False)
+    protein_goal = db.Column(db.Float)
+    carbs_goal = db.Column(db.Float)
+    fat_goal = db.Column(db.Float)
+    gender = db.Column(db.Text)
+    age = db.Column(db.Integer)
+    height_ft = db.Column(db.Integer)
+    height_in = db.Column(db.Integer)
+    weight = db.Column(db.Integer)
+    activity_level = db.Column(db.Text)
 
     consumed = db.relationship('Consumed', backref='users')
 
@@ -30,7 +36,7 @@ class User(db.Model):
         return f"<User #{self.id}: {self.username}, {self.email}>"
 
     @classmethod
-    def signup(cls, username, email, password, image_url):
+    def signup(cls, username, email, password, image_url, calorie_goal):
         """Sign up user.
 
         Hashes password and adds user to system.
@@ -43,6 +49,7 @@ class User(db.Model):
             email=email,
             password=hashed_pwd,
             image_url=image_url,
+            calorie_goal=calorie_goal,
         )
 
         db.session.add(user)

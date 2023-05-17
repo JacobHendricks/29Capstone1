@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block body_class %}onboarding{% endblock %}
+
+{% block content %}
+
+<h2>Add Food</h2>
+
+
+
+<!-- <div>
+  <label for="date">Date:</label>
+  <input type="date" id="date" name="date">
+  <br><br>
+</div>
+<div>
+  <p>Meal:</p>
+  <label for="breakfast">Breakfast</label>
+  <input type="radio" id="breakfast" name="breakfast" value="breakfast"><br>
+  <label for="lunch">Lunch</label>
+  <input type="radio" id="lunch" name="lunch" value="lunch"><br>
+  <label for="dinner">Dinner</label>
+  <input type="radio" id="dinner" name="dinner" value="dinner"><br>
+  <label for="snack">Snack</label>
+  <input type="radio" id="snack" name="snack" value="snack"><br>
+  <br><br>
+</div> -->
+
+<form action="/search" method="POST">
+  <label for="search">Search for Food</label><br>
+  <input type="text" name="search" id="search" placeholder="eg. 3 eggs, or 8 oz milk">
+  <button>Search</button>
+</form>
+
+{% if result %}
+<img src="{{ result['img']}}" alt="{{ result['food_name']}}">
+<div>Food: {{ result['food_name']}}</div>
+<div>Qty: {{ result['serving_qty'] }}</div>
+<div>Unit: {{ result['serving_unit'] }}</div>
+<div>Calories: {{ result['calories']}}</div>
+<div>Carbs: {{ result['carbs']}}</div>
+<div>Protein: {{ result['protein']}}</div>
+<div>Fat: {{ result['total_fat']}}</div>
+
+<form method="POST" id="add_form">
+  {{ form.hidden_tag() }}
+
+   <button class="btn btn-primary btn-lg btn-block" type="submit">Add Food</button>
+</form>
+{% endif  %}
+
+
+
+
+{% endblock %}

@@ -1,17 +1,157 @@
 {% extends 'base.html' %}
+{% block body_class %}{% endblock %}
 {% block content %}
 
-<div>
-  <label for="date">Date:</label>
-  <input type="date" id="date" name="date">
-  <br><br>
+<br>
+
+<div class="container">
+  <div class="row">
+    <label class="col-form-label col-sm-1" for="date"><b>Date</b></label>
+    <div class="col-4">
+      <input class="form-control" type="date" id="date" name="date" value="2023-05-05">
+    </div>
+  </div>
 </div>
 
-<div>
-  <h4>Breakfast</h4>
-  <ul>
+<br>
+
+<div class="container text-center">
+  <div class="row justify-content-md-center">
+    <div class="col-7 border rounded border-dark p-3 bg-light" id="daily-summary">
+      <div class="row" id="daily-total">
+        <div class="col-sm-3"><span></span></div>
+        <div class="col-sm-2"><span><b>Goal</b></span></div>
+        <div class="col-sm-1"><span>-</span></div>
+        <div class="col-sm-2"><span><b>Food</b></span></div>
+        <div class="col-sm-1"><span>=</span></div>
+        <div class="col-sm-2"><span><b>Remaining</b></span></div>
+      </div>
     
-  </ul>
+      <div class="row" id="calorie-daily-total">
+        <div class="col-3"><span>Calories</span></div>
+        <div class="col-2"><span id="cal-goal">{{ user.calorie_goal }}</span></div>
+        <div class="col-1"><span>-</span></div>
+        <div class="col-2"><span id="cal-consumed">0</span></div>
+        <div class="col-1"><span>=</span></div>
+        <div class="col-2"><span id="cal-remaining">0</span></div>
+      </div>
+    
+      <div class="row" id="carb-daily-total">
+        <div class="col-3"><span>Carbohydrates</span></div>
+        <div class="col-2"><span id="carb-goal">{{ user.carbs_goal }}</span></div>
+        <div class="col-1"><span>-</span></div>
+        <div class="col-2"><span id="carb-consumed">0</span></div>
+        <div class="col-1"><span>=</span></div>
+        <div class="col-2"><span id="carb-remaining">0</span></div>
+      </div>
+    
+      <div class="row" id="protein-daily-total">
+        <div class="col-3"><span>Protein</span></div>
+        <div class="col-2"><span id="protein-goal">{{ user.protein_goal }}</span></div>
+        <div class="col-1"><span>-</span></div>
+        <div class="col-2"><span id="protein-consumed">0</span></div>
+        <div class="col-1"><span>=</span></div>
+        <div class="col-2"><span id="protein-remaining">0</span></div>
+      </div>
+    
+      <div class="row" id="fat-daily-total">
+        <div class="col-3"><span>Fat</span></div>
+        <div class="col-2"><span id="fat-goal">{{ user.fat_goal }}</span></div>
+        <div class="col-1"><span>-</span></div>
+        <div class="col-2"><span id="fat-consumed">0</span></div>
+        <div class="col-1"><span>=</span></div>
+        <div class="col-2"><span id="fat-remaining">0</span></div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<br>
+
+<div class="container" id="food-list">
+  <div class="container">
+    <table id="breakfast-table" class="table border rounded border-dark align-middle text-center">
+      <thead class="table-primary">
+        <tr>
+          <th class="p-0 col-2"><h3 class="m-0"><b>Breakfast</b></h3></th>
+          <th class="col-2" scope="col">Food</th>
+          <th scope="col">Qty</th>
+          <th scope="col">Unit</th>
+          <th scope="col">Calories</th>
+          <th scope="col">Carbs</th>
+          <th scope="col">Protein</th>
+          <th scope="col">Fat</th>
+          <th scope="col">Remove</th>
+        </tr>
+      </thead>
+      <tbody id="breakfast-table-body">
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container">
+    <table id="lunch-table" class="table border rounded border-dark align-middle text-center">
+      <thead class="table-primary">
+        <tr>
+          <th class="p-0 col-2"><h3 class="m-0"><b>Lunch</b></h3></th>
+          <th class="col-2">Food</th>
+          <th>Qty</th>
+          <th>Unit</th>
+          <th>Calories</th>
+          <th>Carbs</th>
+          <th>Protein</th>
+          <th>Fat</th>
+          <th scope="col">Remove</th>
+        </tr>
+      </thead>
+      <tbody id="lunch-table-body">
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container">
+    <table id="dinner-table" class="table border rounded border-dark align-middle text-center">
+      <thead class="table-primary">
+        <tr>
+          <th class="p-0 col-2"><h3 class="m-0"><b>Dinner</b></h3></th>
+          <th class="col-2">Food</th>
+          <th>Qty</th>
+          <th>Unit</th>
+          <th>Calories</th>
+          <th>Carbs</th>
+          <th>Protein</th>
+          <th>Fat</th>
+          <th scope="col">Remove</th>
+        </tr>
+      </thead>
+      <tbody id="dinner-table-body">
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container">
+    <table id="snacks-table" class="table border rounded border-dark align-middle text-center">
+      <thead class="table-primary">
+        <tr>
+          <th class="p-0 col-2"><h3 class="m-0"><b>Snacks</b></h3></th>
+          <th class="col-2">Food</th>
+          <th>Qty</th>
+          <th>Unit</th>
+          <th>Calories</th>
+          <th>Carbs</th>
+          <th>Protein</th>
+          <th>Fat</th>
+          <th scope="col">Remove</th>
+        </tr>
+      </thead>
+      <tbody id="snacks-table-body">
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="/static/tracker.js"></script>
 {% endblock %}

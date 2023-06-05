@@ -1,11 +1,13 @@
 import os
 import requests
 
-from flask import Flask, render_template, request, flash, redirect, session, g, abort
+from datetime import datetime
+
+from flask import Flask, render_template, request, flash, redirect, session, g, abort, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, FoodLogForm, FoodAddForm, UserEditGoalsForm, UserEditProfileForm
+from forms import UserAddForm, LoginForm, FoodLogForm, FoodAddForm, UserEditGoalsForm, UserEditProfileForm, FavoriteLogForm
 from models import db, connect_db, User, Food, Consumed
 
 CURR_USER_KEY = "curr_user"
@@ -33,6 +35,7 @@ def add_user_to_g():
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
+        # g.user.calorie_goal = round(g.user.calorie_goal)
 
     else:
         g.user = None
@@ -167,7 +170,7 @@ def profile(user_id):
     return render_template("profile.html", user=user, form=form)
 
 ##############################################################################
-# Homepage and error pages
+# Homepage
 
 
 @app.route('/')
@@ -176,14 +179,48 @@ def homepage():
 
     if g.user:
 
-        return render_template('home.html')
+        return render_template('home.html', user=g.user)
 
     else:
         return render_template('home-anon.html')
 
+##############################################################################
+# API routes
+
+
+@app.route('/api/foods/<meal>/<date>')
+def list_meal(meal, date):
+    """Returns JSON with all foods from a meal and date"""
+
+    food_list = [consumed.foods.serialize() for consumed in Consumed.query.filter(
+        Consumed.user_id == g.user.id, Consumed.date == date, Consumed.meal == meal.capitalize())]
+
+    return jsonify(food_list=food_list)
+
+
+@app.route('/api/foods/<int:id>/<date>', methods=["DELETE"])
+def delete_food(id, date):
+    """Deletes a particular consumed record"""
+    consumed = Consumed.query.filter(
+        Consumed.food_id == id, Consumed.date == date).first()
+    db.session.delete(consumed)
+    db.session.commit()
+    return jsonify(message="deleted")
+
+
+@app.route('/api/foods/favorite/<int:id>', methods=["PATCH"])
+def remove_favorite(id):
+    """Removed a particular food from favorites"""
+    food = Food.query.get_or_404(id)
+    consumed = Consumed.query.get_or_404(food.consumed[0].id)
+    consumed.favorite = False
+
+    db.session.commit()
+    return jsonify(message="updated")
+
 
 ##############################################################################
-# Search pages
+# Search page
 
 search_result = {
     'food_name': "",
@@ -201,6 +238,15 @@ search_result = {
     'sugar': "",
     'protein': "",
     'img': "",
+}
+
+csd_dict = {
+    "user_id": 1,
+    "food_id": 2,
+    "date": datetime.utcnow(),
+    "meal": "Breakfast",
+    "servings": 1,
+    "favorite": False
 }
 
 
@@ -231,34 +277,6 @@ def food_search(food):
     return result
 
 
-@app.route('/add', methods=["GET", "POST"])
-def search_page():
-    """Search for food in Nutrionix API and add food to database"""
-
-    if not g.user:
-        flash("Must sign in to search.", "danger")
-        return redirect("/")
-
-    form = FoodAddForm()
-
-    if form.validate_on_submit():
-        new_food = Food(**search_result)
-        db.session.add(new_food)
-        db.session.commit()
-
-        # csd = Consumed(
-        #     user_id = g.user.id
-        #     food_id = 1
-        #     date =
-        #     meal =
-        # )
-
-        flash("Food added")
-        return redirect('/')
-
-    return render_template('search.html', result=search_result, form=form)
-
-
 @app.route('/search', methods=["POST"])
 def search():
     """Search for food in Nutrionix API"""
@@ -273,3 +291,84 @@ def search():
         search_result[r] = result[r]
 
     return redirect("/add")
+
+
+@app.route('/add', methods=["GET", "POST"])
+def search_page():
+    """Add food from search to daily food log"""
+
+    if not g.user:
+        flash("Must sign in to search.", "danger")
+        return redirect("/")
+
+    form = FoodLogForm()
+
+    if form.validate_on_submit():
+        new_food = Food(**search_result)
+        db.session.add(new_food)
+        db.session.commit()
+
+        csd_dict['user_id'] = g.user.id
+        csd_dict['food_id'] = new_food.id
+        csd_dict['date'] = form.date.data
+        csd_dict['meal'] = form.meal.data
+        csd_dict['favorite'] = form.favorite.data
+
+        csd = Consumed(**csd_dict)
+        db.session.add(csd)
+        db.session.commit()
+
+        flash("Food added", "success")
+        return redirect('/')
+
+    return render_template('search.html', result=search_result, form=form)
+
+
+##############################################################################
+# Favorites page
+
+@app.route('/add/favorites')
+def favorites_page():
+    """Show Favorites"""
+
+    if not g.user:
+        flash("Must sign in to search.", "danger")
+        return redirect("/")
+
+    breakfast_fav = Consumed.query.filter(
+        Consumed.favorite.is_(True), Consumed.meal == 'Breakfast')
+    lunch_fav = Consumed.query.filter(
+        Consumed.favorite.is_(True), Consumed.meal == 'Lunch')
+    dinner_fav = Consumed.query.filter(
+        Consumed.favorite.is_(True), Consumed.meal == 'Dinner')
+    snacks_fav = Consumed.query.filter(
+        Consumed.favorite.is_(True), Consumed.meal == 'Snacks')
+
+    return render_template('favorites.html', breakfast_fav=breakfast_fav, lunch_fav=lunch_fav, dinner_fav=dinner_fav, snacks_fav=snacks_fav)
+
+
+@app.route('/add/favorites', methods=["POST"])
+def add_favorites():
+    """Add selected Favorites to daily food log"""
+
+    if not g.user:
+        flash("Must sign in to search.", "danger")
+        return redirect("/")
+
+    selection = request.form.getlist("add_favorite")
+    res = [i.strip(" [] ").split(", ") for i in selection]
+    date = request.form["date"]
+
+    for (food_id, meal) in res:
+        csd_dict['user_id'] = g.user.id
+        csd_dict['food_id'] = food_id
+        csd_dict['date'] = date
+        csd_dict['meal'] = meal
+        csd_dict['favorite'] = False
+
+        csd = Consumed(**csd_dict)
+        db.session.add(csd)
+
+    db.session.commit()
+    flash("Food added", "success")
+    return redirect("/")

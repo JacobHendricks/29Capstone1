@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, DecimalField, FloatField, RadioField, BooleanField, DateField, IntegerField, SelectField
+from wtforms import StringField, PasswordField, DecimalField, FloatField, RadioField, BooleanField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Email, Length
+from wtforms.fields.html5 import DateField
 
 
 class UserAddForm(FlaskForm):
@@ -15,11 +16,13 @@ class UserAddForm(FlaskForm):
 
 class UserEditGoalsForm(FlaskForm):
     """Form for editing user health info and goals"""
-    calorie_goal = FloatField('Calories',
-                              validators=[DataRequired()])
-    carbs_goal = FloatField('Carbohydrates')
-    protein_goal = FloatField('Proteins')
-    fat_goal = FloatField('Fats')
+    calorie_goal = IntegerField('Calories',
+                                validators=[DataRequired(message='Must enter a whole number')])
+    carbs_goal = IntegerField(
+        'Carbohydrates')
+    protein_goal = IntegerField(
+        'Proteins')
+    fat_goal = IntegerField('Fats')
 
 
 class UserEditProfileForm(FlaskForm):
@@ -60,10 +63,16 @@ class FoodAddForm(FlaskForm):
 class FoodLogForm(FlaskForm):
     """Form for logging consumed food"""
 
-    user_id = IntegerField('User ID')
-    food_id = IntegerField('Food ID')
     date = DateField('Date')
     meal = RadioField('Meal', choices=[
-                      'Breakfast', 'Lunch', 'Dinner', 'Snacks'], validators=[DataRequired()])
-    servings = FloatField('Servings')
+                      ('Breakfast', 'Breakfast'), ('Lunch', 'Lunch'), ('Dinner', 'Dinner'), ('Snacks', 'Snacks')], validators=[DataRequired()])
+    favorite = BooleanField('Add to favorites?')
+
+
+class FavoriteLogForm(FlaskForm):
+    """Form for logging consumed favorite food"""
+
+    date_fav = DateField('Date')
+    meal = RadioField('Meal', choices=[
+                      ('Breakfast', 'Breakfast'), ('Lunch', 'Lunch'), ('Dinner', 'Dinner'), ('Snacks', 'Snacks')], validators=[DataRequired()])
     favorite = BooleanField('Add to favorites?')

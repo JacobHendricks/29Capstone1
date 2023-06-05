@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+
+<h1 class="mt-3">Favorites</h1>
+<p>Select from your saved foods to quickly add to your daily log</p>
+
+<form method="POST" action="/add/favorites" id="add_favorite">
+  <div class="container">
+    <div class="row">
+      <label class="col-form-label col-sm-1" for="date"><b>Date</b></label>
+      <div class="col-sm-4">
+        <input class="form-control" type="date" id="date" name="date">
+      </div>
+    </div>
+  </div>
+
+  <br><br>
+
+  <div class="container p-0" id="favorites-list">
+    <div class="container p-0">
+      <h4 class="mb-1">Breakfast</h4>
+      <table id="breakfast-table-fav" class="table border rounded border-dark align-middle text-center">
+        <thead class="table-warning">
+          <tr>
+            <th scope="col">Select</th>
+            <th class="col-2" scope="col"></th>
+            <th class="col-2" scope="col">Food</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Calories</th>
+            <th scope="col">Carbs</th>
+            <th scope="col">Protein</th>
+            <th scope="col">Fat</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody id="breakfast-table-body">
+          {% for favorite in breakfast_fav %}
+            <tr data-food-id="{{ favorite.foods.id }}">
+              <td><input class="form-check-input btn btn-outline-primary" type="checkbox" name="add_favorite" value="[{{ favorite.foods.id }}, {{ favorite.meal }}]"></td>
+              <td><img src="{{ favorite.foods.img }}" alt="Responsive image" class="mh-5"></td>
+              <td>{{ favorite.foods.food_name }}</td>
+              <td>{{ favorite.foods.serving_qty }}</td>
+              <td>{{ favorite.foods.serving_unit }}</td>
+              <td>{{ favorite.foods.calories|round|int }}</td>
+              <td>{{ favorite.foods.carbs|round|int }}</td>
+              <td>{{ favorite.foods.protein|round|int }}</td>
+              <td>{{ favorite.foods.total_fat|round|int }}</td>
+              <td><button class="unfavor-button button btn btn-outline-danger btn-sm">x</button></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="container p-0">
+      <h4 class="mb-1">Lunch</h4>
+      <table id="lunch-table-fav" class="table border rounded border-dark align-middle text-center">
+        <thead class="table-warning">
+          <tr>
+            <th scope="col">Select</th>
+            <th class="col-2" scope="col"></th>
+            <th class="col-2" scope="col">Food</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Calories</th>
+            <th scope="col">Carbs</th>
+            <th scope="col">Protein</th>
+            <th scope="col">Fat</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody id="lunch-table-body">
+          {% for favorite in lunch_fav %}
+            <tr data-food-id="{{ favorite.foods.id }}">
+              <td><input class="form-check-input btn btn-outline-primary" type="checkbox" name="add_favorite" value="[{{ favorite.foods.id }}, {{ favorite.meal }}]"></td>
+              <td><img src="{{ favorite.foods.img }}" alt="Responsive image" class="mh-5"></td>
+              <td>{{ favorite.foods.food_name }}</td>
+              <td>{{ favorite.foods.serving_qty }}</td>
+              <td>{{ favorite.foods.serving_unit }}</td>
+              <td>{{ favorite.foods.calories|round|int }}</td>
+              <td>{{ favorite.foods.carbs|round|int }}</td>
+              <td>{{ favorite.foods.protein|round|int }}</td>
+              <td>{{ favorite.foods.total_fat|round|int }}</td>
+              <td><button class="unfavor-button button btn btn-outline-danger btn-sm">x</button></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="container p-0">
+      <h4 class="mb-1">Dinner</h4>
+      <table id="dinner-table-fav" class="table border rounded border-dark align-middle text-center">
+        <thead class="table-warning">
+          <tr>
+            <th scope="col">Select</th>
+            <th class="col-2" scope="col"></th>
+            <th class="col-2" scope="col">Food</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Calories</th>
+            <th scope="col">Carbs</th>
+            <th scope="col">Protein</th>
+            <th scope="col">Fat</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody id="dinner-table-body">
+          {% for favorite in dinner_fav %}
+            <tr data-food-id="{{ favorite.foods.id }}">
+              <td><input class="form-check-input btn btn-outline-primary" type="checkbox" name="add_favorite" value="[{{ favorite.foods.id }}, {{ favorite.meal }}]"></td>
+              <td><img src="{{ favorite.foods.img }}" alt="Responsive image" class="mh-5"></td>
+              <td>{{ favorite.foods.food_name }}</td>
+              <td>{{ favorite.foods.serving_qty }}</td>
+              <td>{{ favorite.foods.serving_unit }}</td>
+              <td>{{ favorite.foods.calories|round|int }}</td>
+              <td>{{ favorite.foods.carbs|round|int }}</td>
+              <td>{{ favorite.foods.protein|round|int }}</td>
+              <td>{{ favorite.foods.total_fat|round|int }}</td>
+              <td><button class="unfavor-button button btn btn-outline-danger btn-sm">x</button></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="container p-0">
+      <h4 class="mb-1">Snacks</h4>
+      <table id="snacks-table-fav" class="table border rounded border-dark align-middle text-center">
+        <thead class="table-warning">
+          <tr>
+            <th scope="col">Select</th>
+            <th class="col-2" scope="col"></th>
+            <th class="col-2" scope="col">Food</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Calories</th>
+            <th scope="col">Carbs</th>
+            <th scope="col">Protein</th>
+            <th scope="col">Fat</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody id="snacks-table-body">
+          {% for favorite in snacks_fav %}
+            <tr data-food-id="{{ favorite.foods.id }}">
+              <td><input class="form-check-input btn btn-outline-primary" type="checkbox" name="add_favorite" value="[{{ favorite.foods.id }}, {{ favorite.meal }}]"></td>
+              <td><img src="{{ favorite.foods.img }}" alt="Responsive image" class="mh-5"></td>
+              <td>{{ favorite.foods.food_name }}</td>
+              <td>{{ favorite.foods.serving_qty }}</td>
+              <td>{{ favorite.foods.serving_unit }}</td>
+              <td>{{ favorite.foods.calories|round|int }}</td>
+              <td>{{ favorite.foods.carbs|round|int }}</td>
+              <td>{{ favorite.foods.protein|round|int }}</td>
+              <td>{{ favorite.foods.total_fat|round|int }}</td>
+              <td><button class="unfavor-button button btn btn-outline-danger btn-sm">x</button></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  <button class="btn btn-success btn-block" type="submit" form="add_favorite">Add to Log</button>
+</form>
+
+{% endblock %}
+
+{% block js %}
+<script src="/static/add.js"></script>
+{% endblock %}

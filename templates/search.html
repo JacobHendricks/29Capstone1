@@ -4,52 +4,122 @@
 
 {% block content %}
 
-<h2>Add Food</h2>
+<h1 class="mt-3">Add Food</h1>
 
-
-
-<!-- <div>
-  <label for="date">Date:</label>
-  <input type="date" id="date" name="date">
-  <br><br>
+<div class="container">
+  <div class="row align-items-end">
+    <div class="col-5 p-0">
+      <form action="/search" method="POST" id="search-form">
+        <div class="form-group">
+          <label for="search">Search for Food</label><br>
+          <input class="form-control "type="text" name="search" id="search" placeholder="eg. 3 eggs, or 8 oz milk">
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      <button class="btn btn-primary" type="submit" form="search-form">Search</button>
+    </div>
+    <div class="col text-end">
+      <span>or select from</span>
+    </div>
+    <div class="col">
+      <a href="/add/favorites" class="btn btn-primary">Favorites</a>
+    </div>
+  </div>
 </div>
-<div>
-  <p>Meal:</p>
-  <label for="breakfast">Breakfast</label>
-  <input type="radio" id="breakfast" name="breakfast" value="breakfast"><br>
-  <label for="lunch">Lunch</label>
-  <input type="radio" id="lunch" name="lunch" value="lunch"><br>
-  <label for="dinner">Dinner</label>
-  <input type="radio" id="dinner" name="dinner" value="dinner"><br>
-  <label for="snack">Snack</label>
-  <input type="radio" id="snack" name="snack" value="snack"><br>
-  <br><br>
-</div> -->
 
-<form action="/search" method="POST">
-  <label for="search">Search for Food</label><br>
-  <input type="text" name="search" id="search" placeholder="eg. 3 eggs, or 8 oz milk">
-  <button>Search</button>
-</form>
+<br>
 
-{% if result %}
-<img src="{{ result['img']}}" alt="{{ result['food_name']}}">
-<div>Food: {{ result['food_name']}}</div>
-<div>Qty: {{ result['serving_qty'] }}</div>
-<div>Unit: {{ result['serving_unit'] }}</div>
-<div>Calories: {{ result['calories']}}</div>
-<div>Carbs: {{ result['carbs']}}</div>
-<div>Protein: {{ result['protein']}}</div>
-<div>Fat: {{ result['total_fat']}}</div>
+<table id="search-table" class="table border rounded border-dark align-middle text-center">
+  <thead class="table-secondary">
+    <tr>
+      <th class="col-2"></th>
+      <th class="col-2">Food</th>
+      <th class="col">Qty</th>
+      <th class="col">Unit</th>
+      <th class="col">Calories</th>
+      <th class="col">Carbs</th>
+      <th class="col">Protein</th>
+      <th class="col">Fat</th>
+    </tr>
+  </thead>
+  <tbody id="search-table-body">
+    {% if result %}
+      <tr>
+        <td><img src="{{ result['img']}}" alt="{{ result['food_name']}}" class="mh-50"></td>
+        <td>{{ result['food_name']}}</td>
+        <td>{{ result['serving_qty'] }}</td>
+        <td>{{ result['serving_unit'] }}</td>
+        <td>{{ result['calories'] }}</td>
+        <td>{{ result['carbs'] }}</td>
+        <td>{{ result['protein'] }}</td>
+        <td>{{ result['total_fat'] }}</td>
+      </tr>
+    {% endif  %}
+  </tbody>
+</table>
 
 <form method="POST" id="add_form">
   {{ form.hidden_tag() }}
 
-   <button class="btn btn-primary btn-lg btn-block" type="submit">Add Food</button>
+  <div class="container">
+    <div class="row">
+      <label class="col-form-label col-sm-1" for="date"><b>{{ form.date.label }}</b></label>
+      <div class="col-sm-4">
+        <input class="form-control" type="date" id="date" name="date">
+      </div>
+    </div>
+  </div>
+  {% for error in form.date.errors %}
+  <span class="text-danger">{{ error }}</span>
+  {% endfor %}
+  <br>
+  
+  <div class="container">
+    <div class="row">
+      <label class="col-form-label col-sm-1" for="meal"><b>Meal</b></label>
+      <div class="col-sm-4">
+        <div class="btn-group btn-group-sm" role="group" id="meal" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="meal" id="meal-0" value="Breakfast" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="meal-0">Breakfast</label>
+        
+          <input type="radio" class="btn-check" name="meal" id="meal-1" value="Lunch" autocomplete="off">
+          <label class="btn btn-outline-primary" for="meal-1">Lunch</label>
+        
+          <input type="radio" class="btn-check" name="meal" id="meal-2" value="Dinner" autocomplete="off">
+          <label class="btn btn-outline-primary" for="meal-2">Dinner</label>
+      
+          <input type="radio" class="btn-check" name="meal" id="meal-3" value="Snacks" autocomplete="off">
+          <label class="btn btn-outline-primary" for="meal-3">Snacks</label>
+        </div>
+        {% for error in form.meal.errors %}
+        <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <br>
+  
+  <div class="container">
+    <label class="col-form-label col-sm-2" for="favorite"><b>Save as a favorite?</b></label>
+    <input class="form-check-input btn btn-outline-primary" id="favorite" type="checkbox" name="favorite" value="y"></td>
+  </div>
+
+  {% for error in form.favorite.errors %}
+  <span class="text-danger">{{ error }}</span>
+  {% endfor %}
+
+  <br>
+
 </form>
-{% endif  %}
+
+<div class="container">
+  <button class="btn btn-success btn-block" type="submit" form="add_form">Add to Log</button>
+</div>
 
 
+{% endblock %}
 
-
+{% block js %}
+<script src="/static/add.js"></script>
 {% endblock %}

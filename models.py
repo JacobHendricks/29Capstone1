@@ -10,7 +10,7 @@ db = SQLAlchemy()
 
 
 class User(db.Model):
-    """User in the system."""
+    """User info"""
 
     __tablename__ = 'users'
 
@@ -19,10 +19,10 @@ class User(db.Model):
     username = db.Column(db.Text, nullable=False)
     image_url = db.Column(db.Text, default="/static/images/default-pic.png")
     password = db.Column(db.Text, nullable=False)
-    calorie_goal = db.Column(db.Float, nullable=False)
-    protein_goal = db.Column(db.Float)
-    carbs_goal = db.Column(db.Float)
-    fat_goal = db.Column(db.Float)
+    calorie_goal = db.Column(db.Integer, nullable=False)
+    protein_goal = db.Column(db.Integer, default=0)
+    carbs_goal = db.Column(db.Integer, default=0)
+    fat_goal = db.Column(db.Integer, default=0)
     gender = db.Column(db.Text)
     age = db.Column(db.Integer)
     height_ft = db.Column(db.Integer)
@@ -77,7 +77,7 @@ class User(db.Model):
 
 
 class Food(db.Model):
-    """User in the system."""
+    """Food info"""
 
     __tablename__ = 'foods'
 
@@ -98,9 +98,23 @@ class Food(db.Model):
     protein = db.Column(db.Float)
     img = db.Column(db.Text)
 
+    def serialize(self):
+        """Returns a dict representation of food which we can turn into JSON"""
+        return {
+            'id': self.id,
+            'food_name': self.food_name,
+            'serving_qty': self.serving_qty,
+            'serving_unit': self.serving_unit,
+            'calories': self.calories,
+            'total_fat': self.total_fat,
+            'carbs': self.carbs,
+            'protein': self.protein,
+            'img': self.img
+        }
+
 
 class Consumed(db.Model):
-    """User in the system."""
+    """date/meal of food Consumed"""
 
     __tablename__ = 'consumed'
 

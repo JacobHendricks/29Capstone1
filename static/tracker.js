@@ -36,16 +36,23 @@ async function refresh() {
 
   let date = $("#date").val();
   dailyTotal.calories = 0;
-  dailyTotal.carbohydrates = 0;
+  dailyTotal.carbs = 0;
   dailyTotal.protein = 0;
   dailyTotal.fat = 0;
-  console.log(date);
   
   for (let meal of ["breakfast", "lunch", "dinner", "snacks"]) {
     $(`#${meal}-table-body`).empty();
-    console.log(meal)
     const response = await axios.get(`http://127.0.0.1:5000/api/foods/${meal}/${date}`);
-    console.log(response);
+    console.log(meal)
+    console.log("FOOD LIST", response.data)
+    // show the table only if there is food for that meal
+    if (response.data.food_list.length) {
+      $(`#${meal}-container`).show(); 
+    }
+    else {
+      $(`#${meal}-container`).hide();
+    }
+    // Add food data to meal table
     for (let mealData of response.data.food_list) {
       let newFood = $(generateMealHTML(mealData));
       $(`#${meal}-table`).append(newFood);

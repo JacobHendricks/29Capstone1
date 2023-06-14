@@ -7,7 +7,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, FoodLogForm, FoodAddForm, UserEditGoalsForm, UserEditProfileForm, FavoriteLogForm
+from forms import UserAddForm, LoginForm, FoodLogForm, UserEditGoalsForm, UserEditProfileForm
 from models import db, connect_db, User, Food, Consumed
 
 CURR_USER_KEY = "curr_user"

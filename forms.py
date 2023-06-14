@@ -40,24 +40,24 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[Length(min=6)])
 
 
-class FoodAddForm(FlaskForm):
-    """Form for adding food to db"""
+# class FoodAddForm(FlaskForm):
+#     """Form for adding food to db"""
 
-    food_name = StringField('Food')
-    brand_name = StringField('Brand Name')
-    serving_qty = FloatField('Qty')
-    serving_unit = StringField('Unit')
-    serving_weight_grams = FloatField('Weight in Grams')
-    calories = FloatField('Calories')
-    total_fat = FloatField('Fat')
-    saturated_fat = FloatField('Saturated Fat')
-    cholesterol = FloatField('Cholesterol')
-    sodium = FloatField('Sodium')
-    carbs = FloatField('Carbs')
-    fiber = FloatField('Fiber')
-    sugar = FloatField('Sugar')
-    protein = FloatField('Protein')
-    img = StringField('Img')
+#     food_name = StringField('Food')
+#     brand_name = StringField('Brand Name')
+#     serving_qty = FloatField('Qty')
+#     serving_unit = StringField('Unit')
+#     serving_weight_grams = FloatField('Weight in Grams')
+#     calories = FloatField('Calories')
+#     total_fat = FloatField('Fat')
+#     saturated_fat = FloatField('Saturated Fat')
+#     cholesterol = FloatField('Cholesterol')
+#     sodium = FloatField('Sodium')
+#     carbs = FloatField('Carbs')
+#     fiber = FloatField('Fiber')
+#     sugar = FloatField('Sugar')
+#     protein = FloatField('Protein')
+#     img = StringField('Img')
 
 
 class FoodLogForm(FlaskForm):
@@ -69,10 +69,10 @@ class FoodLogForm(FlaskForm):
     favorite = BooleanField('Add to favorites?')
 
 
-class FavoriteLogForm(FlaskForm):
-    """Form for logging consumed favorite food"""
+# class FavoriteLogForm(FlaskForm):
+#     """Form for logging consumed favorite food"""
 
-    date_fav = DateField('Date')
-    meal = RadioField('Meal', choices=[
-                      ('Breakfast', 'Breakfast'), ('Lunch', 'Lunch'), ('Dinner', 'Dinner'), ('Snacks', 'Snacks')], validators=[DataRequired()])
-    favorite = BooleanField('Add to favorites?')
+#     date_fav = DateField('Date')
+#     meal = RadioField('Meal', choices=[
+#                       ('Breakfast', 'Breakfast'), ('Lunch', 'Lunch'), ('Dinner', 'Dinner'), ('Snacks', 'Snacks')], validators=[DataRequired()])
+#     favorite = BooleanField('Add to favorites?')

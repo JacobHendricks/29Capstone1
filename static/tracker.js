@@ -42,7 +42,7 @@ async function refresh() {
   
   for (let meal of ["breakfast", "lunch", "dinner", "snacks"]) {
     $(`#${meal}-table-body`).empty();
-    const response = await axios.get(`http://127.0.0.1:5000/api/foods/${meal}/${date}`);
+    const response = await axios.get(`https://nutrition-tracker-sfqe.onrender.com/api/foods/${meal}/${date}`);
     console.log(meal)
     console.log("FOOD LIST", response.data)
     // show the table only if there is food for that meal
@@ -100,7 +100,7 @@ $("#food-list").on("click", ".delete-button", async function (evt) {
   let foodId = $food.attr("data-food-id");
   let date = $("#date").val();
 
-  await axios.delete(`http://127.0.0.1:5000/api/foods/${foodId}/${date}`);
+  await axios.delete(`https://nutrition-tracker-sfqe.onrender.com/api/foods/${foodId}/${date}`);
   $food.remove();
   refresh();
 });
